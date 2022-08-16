@@ -1,22 +1,45 @@
-### Hospital-Management-System
-The project Hospital Management System (HMS) is for
-computerizing the working in a hospital. The software
-takes care of all the requirements of an average
-hospital and is capable to provide easy and effective
-storage of information related to patients that come up
-to the hospital.
-### Database Purpose
-The main purpose of the system is to:
+### Database Table Structure:
 
-- Design and maintain a database of the patient as well as employee details of the hospital.
-- It also includes the patients’ appointment, billing information, lab tests, disease history
-- A feedback table is maintained in the database to store the feedbacks of the patients
-- Reports are generated to visualize the data in a better manner.
+<br>
 
-### Model Summary
+#### Inserting Data
 
-- Employee entity will have information of all hospital employee login information and which Admin (Employee) created other Employees (Doctor, Nurse, Lab assistant)
-- Employee Details will have information of Hospital employees (Admin, Doctor, Nurse, Lab Assistant) differentiated by Role.
-- Patient has all demographic information related to Patient.
-- Address can have multiple (current, previous) address for each patient and Hospital employees.
-- Department has information related to hospital entities (Dental, Pediatric, Emergency, Physical therapy, etc.)
+For inserting the data, firstly I just defined the schema so after inserting the data I had to alter the table to define the primary key. 
+For example below is the code of step by step how data was inserted and table was altered. 
+```
+INSERT INTO `user` (`user_id`, `name`, `username`, `pass`, `type`) VALUES
+(12, 'administrator', 'admin', 'd033e22ae348aeb5660fc2140aec35850c4da997', 'Administrator');
+```
+
+#### Alter table 
+```
+ALTER TABLE `autonumber`
+  ADD PRIMARY KEY (`id`);
+```
+### Inline views
+An inline view is a query in the FROM clause of another query. 
+In the following example, I tried to explain how I utilized inline query to calculate the employyes percentage in each department.
+```
+select Department_Name, count(*),
+to_char((count(*)/No_of_Employees.cnt)*100, '90.99') Percentages
+from Department,Employee, ( select count(*) cnt from Employee ) No_of_Employees
+where Department.Department_Id = Employee.Department_Id
+group by Department_Name, No_of_Employees.cnt
+```
+
+Here I have used count() with in from clause to select particular data for the outer query.
+
+### Materialized view
+
+Having working with real time data required more than just regular view, materialized view simplifies complex data by saving query information – you don’t have to create a new query every time you need to access the information. In my project for counting the degree of employee whenever it is updated I have created materialized view which allowed to acess the information whenver the data was changed in either columns related to degree of employees.
+
+```
+create materialized view Employee_View
+	 build immediate
+	 refresh on commit
+	 as 
+	 select Degree, count(Degree) 
+	 from Salary 
+	 group by Degree;
+```
+
