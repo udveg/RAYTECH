@@ -48,3 +48,21 @@ ORDER BY
 
 In the above example I have partitioned the employee table based on departments and given them count, this will give output as employees in each deoartment ranked based on salary.
 
+#### COALESCE 
+
+The SQL Server COALESCE expression accepts a number of arguments, evaluates them in sequence, and returns the first non-null argument. To make the output more business friendly, I used the COALESCE expression to substitute NULL by the string N/A (not available) as shown in the following query:
+
+```
+SELECT 
+    first_name, 
+    last_name, 
+    COALESCE(phone,'N/A') phone, 
+    email
+FROM 
+    employee.details
+ORDER BY 
+    first_name, 
+    last_name;
+```
+
+The query will replace null with N/A. 
