@@ -46,3 +46,39 @@ SELECT employee_id,
        day_of_week || ', ' || LEFT(date, 10) AS day_and_date
   FROM employee.employee_details
 ```
+
+#### Changing case with UPPER and LOWER
+
+We can use LOWER to force every character in a string to become lower-case. Similarly, we can use UPPER to make all the letters appear in upper-case:
+In my data while writing address it was kind of messy, so I had to use lower to make it appear good. 
+```
+SELECT EMPLOYEE_ID,
+       address,
+       UPPER(address) AS address_upper,
+       LOWER(address) AS address_lower
+  FROM EMPLOYEE.DETAILS
+```
+
+#### Turning strings into dates
+For a well-constructed date and time field I had to cast the date and then extract year, month or date based on requirement.
+```
+SELECT employee_id,
+       date,
+       (SUBSTR(date, 7, 4) || '-' || LEFT(date, 2) ||
+        '-' || SUBSTR(date, 4, 2))::date AS cleaned_date
+  FROM employee.details
+```
+To extract the date, year and month I have used extract.
+
+```
+SELECT cleaned_date,
+       EXTRACT('year'   FROM cleaned_date) AS year,
+       EXTRACT('month'  FROM cleaned_date) AS month,
+       EXTRACT('day'    FROM cleaned_date) AS day,
+       EXTRACT('hour'   FROM cleaned_date) AS hour,
+       EXTRACT('minute' FROM cleaned_date) AS minute,
+       EXTRACT('second' FROM cleaned_date) AS second,
+       EXTRACT('decade' FROM cleaned_date) AS decade,
+       EXTRACT('dow'    FROM cleaned_date) AS day_of_week
+  FROM employee.details
+```
