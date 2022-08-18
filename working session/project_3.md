@@ -43,3 +43,39 @@ create materialized view Employee_View
 	 group by Degree;
 ```
 
+#### CURSOR
+Whenver we want to perform or select certain record from table we use select e.g, SELECT statement returns a set of rows which is called a result set. However, sometimes, you may want to process a data set on a row by row basis. This is where cursors come into play. <br>
+A database cursor is an object that enables traversal over the rows of a result set. It allows you to process individual row returned by a query.
+
+
+```
+DECLARE 
+    @product_name VARCHAR(MAX), 
+    @list_price   DECIMAL;
+
+DECLARE cursor_product CURSOR
+FOR SELECT 
+        product_name, 
+        list_price
+    FROM 
+        production.products;
+
+OPEN cursor_product;
+
+FETCH NEXT FROM cursor_product INTO 
+    @product_name, 
+    @list_price;
+
+WHILE @@FETCH_STATUS = 0
+    BEGIN
+        PRINT @product_name + CAST(@list_price AS varchar);
+        FETCH NEXT FROM cursor_product INTO 
+            @product_name, 
+            @list_price;
+    END;
+
+CLOSE cursor_product;
+
+DEALLOCATE cursor_product;
+```
+
