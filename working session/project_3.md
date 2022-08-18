@@ -50,32 +50,27 @@ A database cursor is an object that enables traversal over the rows of a result 
 
 ```
 DECLARE 
-    @product_name VARCHAR(MAX), 
-    @list_price   DECIMAL;
-
-DECLARE cursor_product CURSOR
-FOR SELECT 
-        product_name, 
-        list_price
-    FROM 
-        production.products;
-
-OPEN cursor_product;
-
-FETCH NEXT FROM cursor_product INTO 
-    @product_name, 
-    @list_price;
-
-WHILE @@FETCH_STATUS = 0
+    cursor salaries(p_hourly in number)
+    in SELECT *
+    where HOURLY_PAY = P_HOURLY;
+    
+    1_SAL SALARY%ROWTYPE;
     BEGIN
-        PRINT @product_name + CAST(@list_price AS varchar);
-        FETCH NEXT FROM cursor_product INTO 
-            @product_name, 
-            @list_price;
-    END;
+       dbms_output.put_line('extracting hourly pay')
+       open salaries(30);
+       loop
+       	  fetch salaries into 1_sal;
+	exit when salaries%notfound
+	dbms_output.put('for account' || 1_sal.account_id||'houlr pay is');
+	end loop;
+	close salries;
+	 end;
 
-CLOSE cursor_product;
+```
 
-DEALLOCATE cursor_product;
+Output:
+
+```
+For Account 40 hourly pay is 30
 ```
 
